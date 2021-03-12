@@ -2,6 +2,8 @@ package guru.springframework.recipe.domain;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +32,9 @@ public class Recipe {
 
 	@Lob
 	private Byte[] image;
+
+	@Enumerated(value = EnumType.STRING)
+	private Difficulty difficulty;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Notes notes;
@@ -120,5 +125,13 @@ public class Recipe {
 
 	public void setNotes(Notes notes) {
 		this.notes = notes;
+	}
+
+	public Difficulty getDifficulty() {
+		return difficulty;
+	}
+
+	public void setDifficulty(Difficulty difficulty) {
+		this.difficulty = difficulty;
 	}
 }

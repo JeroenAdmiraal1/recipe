@@ -3,9 +3,34 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Recipe Home</title>
+    <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
 </head>
 <body>
-<h1>My Recipes! That's Right</h1>
+<h2>My Recipes!</h2>
+
+<table style="width:100%">
+    <tr th:each="recipe: ${recipes}">
+        <th th:text="${recipe.id}">Id</th>
+        <th th:text="${recipe.description}">Description</th>
+        <th th:text="${recipe.directions}">Directions</th>
+        <th th:text="${recipe.difficulty}">Difficulty</th>
+        <th th:text="${recipe.notes}">Notes</th>
+    </tr>
+</table>
 
 </body>
 </html>

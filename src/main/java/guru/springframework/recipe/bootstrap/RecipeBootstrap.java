@@ -9,6 +9,7 @@ import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repositories.CategoryRepository;
 import guru.springframework.recipe.repositories.RecipeRepository;
 import guru.springframework.recipe.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -37,6 +39,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	private List<Recipe> getRecipes(){
+		log.debug("bootstrap getRecipes");
 
 		List<Recipe> recipes = new ArrayList<>(2);
 
@@ -136,6 +139,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	private Recipe getTacosRecipe() {
+		log.debug("bootstrap getTacosRecipes");
 		Recipe tacosRecipe = new Recipe();
 		tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
 		tacosRecipe.setCookTime(9);
@@ -158,6 +162,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	private Recipe getGuacamoleRecipe() {
+		log.debug("bootstrap getGuacamoleRecipes");
 		Recipe guacamoleRecipe = new Recipe();
 		guacamoleRecipe.setDescription("the best guacamole");
 		guacamoleRecipe.setPrepTime(10);
@@ -179,6 +184,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	private void isUoMPresent(Optional<UnitOfMeasure> eachUoMOptional, Optional<UnitOfMeasure> tablespoonUoMOptional, Optional<UnitOfMeasure> teaspoonUoMOptional, Optional<UnitOfMeasure> dashUoMOptional, Optional<UnitOfMeasure> pintUoMOptional, Optional<UnitOfMeasure> cupsUoMOptional) {
+		log.debug("bootstrap areOptionalsPresent");
 		if(!eachUoMOptional.isPresent()){
 			throw new RuntimeException("Expected UoM not found");
 		}

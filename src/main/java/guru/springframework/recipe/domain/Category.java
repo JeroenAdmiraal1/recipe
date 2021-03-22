@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"recipes"})
 public class Category {
 
 	@Id
@@ -22,6 +23,7 @@ public class Category {
 	private Long id;
 	private String description;
 
+	@ToString.Exclude
 	@ManyToMany(mappedBy = "categories")
 	private Set<Recipe> recipes;
 

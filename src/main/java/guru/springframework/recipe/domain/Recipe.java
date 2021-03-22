@@ -1,6 +1,9 @@
 package guru.springframework.recipe.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -37,12 +40,6 @@ public class Recipe {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
 	private Set<Ingredient> ingredients = new HashSet<>();
 
-	@ManyToMany
-	@JoinTable(name= "recipe_category",
-			joinColumns = @JoinColumn(name= "recipe_id"),
-			inverseJoinColumns = @JoinColumn(name= "category_id"))
-	private Set<Category> categories = new HashSet<>();
-
 	@Lob
 	private Byte[] image;
 
@@ -51,6 +48,12 @@ public class Recipe {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Notes notes;
+
+	@ManyToMany
+	@JoinTable(name= "recipe_category",
+			joinColumns = @JoinColumn(name= "recipe_id"),
+			inverseJoinColumns = @JoinColumn(name= "category_id"))
+	private Set<Category> categories = new HashSet<>();
 
 	public Recipe addIngredient(Ingredient ingredient){
 		ingredient.setRecipe(this);
@@ -62,5 +65,4 @@ public class Recipe {
 		this.notes = notes;
 		notes.setRecipe(this);
 	}
-
 }

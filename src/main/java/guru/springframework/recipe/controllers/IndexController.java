@@ -1,17 +1,14 @@
 package guru.springframework.recipe.controllers;
 
-import guru.springframework.recipe.domain.Category;
+
 import guru.springframework.recipe.domain.Recipe;
-import guru.springframework.recipe.domain.UnitOfMeasure;
-import guru.springframework.recipe.repositories.CategoryRepository;
-import guru.springframework.recipe.repositories.UnitOfMeasureRepository;
 import guru.springframework.recipe.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
+
 import java.util.Set;
 
 @Slf4j

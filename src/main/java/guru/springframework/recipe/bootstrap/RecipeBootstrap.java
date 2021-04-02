@@ -160,6 +160,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 				                          "\n" +
 				                          "\n" +
 				                          "Read more: http://www.simplyrecipes.com/recipes/spicy_grilled_chicken_tacos/#ixzz4jvtrAnNm");
+		tacosRecipe.setUrl("http://www.simplyrecipes.com/recipes/spicy_grilled_chicken_tacos/");
+		tacosRecipe.setServings(2);
+		tacosRecipe.setSource("Simply Recipes");
 		return tacosRecipe;
 	}
 
@@ -182,6 +185,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 				                               "\n" +
 				                               "\n" +
 				                               "Read more: http://www.simplyrecipes.com/recipes/perfect_guacamole/#ixzz4jvpiV9Sd");
+		guacamoleRecipe.setUrl("http://www.simplyrecipes.com/recipes/perfect_guacamole");
+		guacamoleRecipe.setServings(4);
+		guacamoleRecipe.setSource("Simply Recipes");
 		return guacamoleRecipe;
 	}
 

@@ -1,13 +1,14 @@
 package guru.springframework.recipe.services;
 
+import guru.springframework.recipe.converters.RecipeCommandToRecipe;
+import guru.springframework.recipe.converters.RecipeToRecipeCommand;
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.repositories.RecipeRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
@@ -20,15 +21,17 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceImplTest {
 
-	private RecipeServiceImpl recipeService;
+	@Mock
+	private RecipeToRecipeCommand recipeToRecipeCommand;
+
+	@Mock
+	private RecipeCommandToRecipe recipeCommandToRecipe;
 
 	@Mock
 	private RecipeRepository recipeRepository;
 
-	@BeforeEach
-	void setUp(){
-		recipeService = new RecipeServiceImpl(recipeRepository);
-	}
+	@InjectMocks
+	private RecipeServiceImpl recipeService;
 
 	@Test
 	void getRecipes() {
@@ -44,6 +47,7 @@ class RecipeServiceImplTest {
 		verify(recipeRepository, times(1)).findAll();
 	}
 
+	@Test
 	void getRecipeByIdTest() throws Exception {
 		Recipe recipe = new Recipe();
 		recipe.setId(1L);
@@ -52,6 +56,11 @@ class RecipeServiceImplTest {
 		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
 		Recipe returnedRecipe = recipeService.findById(1L);
+
+		assertNotNull(returnedRecipe);
+		verify(recipeRepository, times(1)).findById(anyLong());
+		verify(recipeRepository, never()).findAll();
+
 	}
 
 }

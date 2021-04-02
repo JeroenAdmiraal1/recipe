@@ -1,6 +1,5 @@
 package guru.springframework.recipe.controllers;
 
-
 import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;

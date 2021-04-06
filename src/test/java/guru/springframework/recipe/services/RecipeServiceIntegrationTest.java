@@ -34,7 +34,7 @@ class RecipeServiceIntegrationTest {
 
 	@Test
 	@Transactional
-	void saveRecipeCommand() {
+	void saveRecipeCommand() throws Exception{
 		//given
 		Iterable<Recipe> recipes = recipeRepository.findAll();
 		Recipe testRecipe = recipes.iterator().next();

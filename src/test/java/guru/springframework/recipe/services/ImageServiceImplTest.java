@@ -14,6 +14,7 @@ class ImageServiceImplTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
+		//test
 	}
 
 }

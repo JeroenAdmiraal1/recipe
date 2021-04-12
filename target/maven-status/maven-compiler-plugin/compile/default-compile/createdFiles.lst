@@ -1,0 +1,14 @@
+guru/springframework/recipe/repositories/RecipeRepository.class
+guru/springframework/recipe/repositories/UnitOfMeasureRepository.class
+guru/springframework/recipe/domain/Recipe.class
+guru/springframework/recipe/domain/Ingredient.class
+guru/springframework/recipe/services/RecipeServiceImpl.class
+guru/springframework/recipe/controllers/IndexController.class
+guru/springframework/recipe/bootstrap/RecipeBootstrap.class
+guru/springframework/recipe/domain/Notes.class
+guru/springframework/recipe/domain/Difficulty.class
+guru/springframework/recipe/repositories/CategoryRepository.class
+guru/springframework/recipe/services/RecipeService.class
+guru/springframework/recipe/RecipeApplication.class
+guru/springframework/recipe/domain/Category.class
+guru/springframework/recipe/domain/UnitOfMeasure.class

@@ -44,6 +44,10 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 			command.setNotes(notesConverter.convert(recipe.getNotes()));
 		}
 
+		if(recipe.getImage() != null){
+			command.setImage(recipe.getImage());
+		}
+
 		if (recipe.getCategories() != null && recipe.getCategories().size() > 0){
 			recipe.getCategories()
 					.forEach((Category category) -> command.getCategories().add(categoryConverter.convert(category)));

@@ -15,7 +15,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +43,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 		recipeRepository.saveAll(getRecipes());
 	}
 
-	private List<Recipe> getRecipes(){
+	private List<Recipe> getRecipes() {
 		log.debug("bootstrap getRecipes");
 
 		List<Recipe> recipes = new ArrayList<>(2);
@@ -98,6 +101,20 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 		guacamoleRecipe.getCategories().add(americanCategory);
 		guacamoleRecipe.getCategories().add(mexicanCategory);
 
+		//add image
+		try{
+			byte[] array = Files.readAllBytes(Paths.get("src/main/resources/static/images/guacamole.jpg"));
+			Byte[] byteObjects = new Byte[array.length];
+			int i = 0;
+			for(byte b: array){
+				byteObjects[i++] = b;
+			}
+			guacamoleRecipe.setImage(byteObjects);
+
+		} catch (IOException e){
+			log.error("cannot find guacamole image");
+		}
+
 		recipes.add(guacamoleRecipe);
 
 		Recipe tacosRecipe = getTacosRecipe();
@@ -135,6 +152,20 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
 		tacosRecipe.getCategories().add(americanCategory);
 		tacosRecipe.getCategories().add(mexicanCategory);
+
+		//add image
+		try{
+			byte[] array = Files.readAllBytes(Paths.get("src/main/resources/static/images/tacos.jpg"));
+			Byte[] byteObjects = new Byte[array.length];
+			int i = 0;
+			for(byte b: array){
+				byteObjects[i++] = b;
+			}
+			tacosRecipe.setImage(byteObjects);
+
+		} catch (IOException e){
+			log.error("cannot find taco image");
+		}
 
 		recipes.add(tacosRecipe);
 		return recipes;

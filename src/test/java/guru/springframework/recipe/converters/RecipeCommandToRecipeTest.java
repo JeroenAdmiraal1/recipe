@@ -9,6 +9,8 @@ import guru.springframework.recipe.domain.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RecipeCommandToRecipeTest {
@@ -27,6 +29,7 @@ class RecipeCommandToRecipeTest {
 	public static final Long INGRED_ID_1 = 3L;
 	public static final Long INGRED_ID_2 = 4L;
 	public static final Long NOTES_ID = 9L;
+	public static final Byte[] IMAGE = new Byte[10];
 
 	RecipeCommandToRecipe converter;
 
@@ -61,6 +64,7 @@ class RecipeCommandToRecipeTest {
 		recipeCommand.setServings(SERVINGS);
 		recipeCommand.setSource(SOURCE);
 		recipeCommand.setUrl(URL);
+		recipeCommand.setImage(IMAGE);
 
 		NotesCommand notes = new NotesCommand();
 		notes.setId(NOTES_ID);
@@ -94,6 +98,7 @@ class RecipeCommandToRecipeTest {
 		assertEquals(SOURCE, recipe.getSource());
 		assertEquals(URL, recipe.getUrl());
 		assertEquals(NOTES_ID, recipe.getNotes().getId());
+		assertEquals(IMAGE, recipe.getImage());
 		assertEquals(2, recipe.getCategories().size());
 		assertEquals(2, recipe.getIngredients().size());
 	}

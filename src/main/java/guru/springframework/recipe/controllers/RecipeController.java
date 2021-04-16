@@ -1,15 +1,20 @@
 package guru.springframework.recipe.controllers;
 
 import guru.springframework.recipe.commands.RecipeCommand;
+import guru.springframework.recipe.exceptions.NotFoundException;
 import guru.springframework.recipe.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Slf4j
@@ -54,6 +59,26 @@ public class RecipeController {
 		log.debug("deleting id: " + id );
 		recipeService.deleteById(Long.valueOf(id));
 		return "redirect:/";
+	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NotFoundException.class)
+	public ModelAndView handleNotFound(NotFoundException e){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("recipe/404error");
+		modelAndView.addObject("exception", e);
+		return modelAndView;
+
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(NumberFormatException.class)
+	public ModelAndView handleBadRequest(NumberFormatException e){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("recipe/400error");
+		modelAndView.addObject("exception", e);
+		return modelAndView;
+
 	}
 
 }

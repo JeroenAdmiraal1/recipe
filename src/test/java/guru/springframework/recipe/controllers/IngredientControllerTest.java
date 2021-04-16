@@ -42,7 +42,8 @@ class IngredientControllerTest {
 	@BeforeEach
 	void setUp() {
 		ingredientController = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
-		mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(ingredientController)
+				          .setControllerAdvice(new ControllerExceptionHandler()).build();
 	}
 
 	@Test

@@ -14,16 +14,11 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 @Data
-@Entity
 @EqualsAndHashCode(exclude = {"recipe"})
 public class Notes {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private String id;
 
-	@OneToOne
-	@ToString.Exclude
 	private Recipe recipe;
 
 	@Lob

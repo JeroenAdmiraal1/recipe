@@ -50,7 +50,7 @@ class IndexControllerTest {
 		recipesData.add(new Recipe());
 
 		Recipe recipe = new Recipe();
-		recipe.setId(2L);
+		recipe.setId("2");
 		recipesData.add(recipe);
 
 		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);

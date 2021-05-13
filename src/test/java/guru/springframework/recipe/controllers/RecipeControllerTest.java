@@ -46,9 +46,9 @@ class RecipeControllerTest {
 	public void testGetRecipe() throws Exception {
 
 		Recipe recipe = new Recipe();
-		recipe.setId(1L);
+		recipe.setId("1");
 
-		when(recipeService.findById(anyLong())).thenReturn(recipe);
+		when(recipeService.findById(anyString())).thenReturn(recipe);
 
 		mockMvc.perform(get("/recipe/1/show"))
 				.andExpect(status().isOk())
@@ -59,20 +59,13 @@ class RecipeControllerTest {
 	@Test
 	public void testGetRecipeNotFound() throws Exception {
 		Recipe recipe = new Recipe();
-		recipe.setId(1L);
+		recipe.setId("1");
 
-		when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+		when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
 		mockMvc.perform(get("/recipe/1/show"))
 				.andExpect(status().isNotFound())
 				.andExpect(view().name("recipe/404error"));
-	}
-
-	@Test
-	public void testBadRequest() throws Exception {
-		mockMvc.perform(get("/recipe/asdf/show"))
-				.andExpect(status().isBadRequest())
-				.andExpect(view().name("recipe/400error"));
 	}
 
 	@Test
@@ -89,7 +82,7 @@ class RecipeControllerTest {
 
 		RecipeCommand command = new RecipeCommand();
 		RecipeCommand savedCommand = new RecipeCommand();
-		savedCommand.setId(1L);
+		savedCommand.setId("1");
 
 		when(recipeService.saveRecipeCommand(any())).thenReturn(savedCommand);
 
@@ -119,9 +112,9 @@ class RecipeControllerTest {
 	@Test
 	public void testGetUpdatedView() throws Exception {
 		RecipeCommand savedCommand = new RecipeCommand();
-		savedCommand.setId(1L);
+		savedCommand.setId("1");
 
-		when(recipeService.findCommandById(anyLong())).thenReturn(savedCommand);
+		when(recipeService.findCommandById(anyString())).thenReturn(savedCommand);
 
 		mockMvc.perform(get("/recipe/1/update"))
 				.andExpect(status().isOk())
@@ -135,6 +128,6 @@ class RecipeControllerTest {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/"));
 
-		verify(recipeService, times(1)).deleteById(anyLong());
+		verify(recipeService, times(1)).deleteById(anyString());
 	}
 }

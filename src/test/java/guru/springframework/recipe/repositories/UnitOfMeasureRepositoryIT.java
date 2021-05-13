@@ -1,7 +1,9 @@
 package guru.springframework.recipe.repositories;
 
 import guru.springframework.recipe.domain.UnitOfMeasure;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
+@Disabled
 @DataJpaTest
 class UnitOfMeasureRepositoryIT {
 

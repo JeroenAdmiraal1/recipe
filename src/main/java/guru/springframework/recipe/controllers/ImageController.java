@@ -20,8 +20,8 @@ import java.io.InputStream;
 @Controller
 public class ImageController {
 
-	private ImageService imageService;
-	private RecipeService recipeService;
+	private final ImageService imageService;
+	private final RecipeService recipeService;
 
 	public ImageController(ImageService imageService, RecipeService recipeService) {
 		this.imageService = imageService;

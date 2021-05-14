@@ -1,11 +1,14 @@
 package guru.springframework.recipe.repositories;
 
+import guru.springframework.recipe.bootstrap.RecipeBootstrap;
 import guru.springframework.recipe.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,12 +17,29 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
-@Disabled
-@DataJpaTest
+
+@ExtendWith(SpringExtension.class)
+@DataMongoTest
 class UnitOfMeasureRepositoryIT {
 
 	@Autowired
 	UnitOfMeasureRepository unitOfMeasureRepository;
+
+	@Autowired
+	CategoryRepository categoryRepository;
+
+	@Autowired
+	RecipeRepository recipeRepository;
+
+
+	@BeforeEach
+	public void setUp() throws Exception {
+		recipeRepository.deleteAll();
+		unitOfMeasureRepository.deleteAll();
+		categoryRepository.deleteAll();
+		RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
+		recipeBootstrap.onApplicationEvent(null);
+	}
 
 	@Test
 	void findByDescriptionTeaspoon() throws Exception{

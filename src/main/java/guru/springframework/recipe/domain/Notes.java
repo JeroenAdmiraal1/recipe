@@ -5,11 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(exclude = {"recipe"})
 public class Notes {
 
+	@Id
 	private String id;
 
 	private Recipe recipe;

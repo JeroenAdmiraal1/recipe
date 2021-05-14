@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IngredientToIngredientCommandTest {
 
-	public static final Recipe RECIPE = new Recipe();
 	public static final BigDecimal AMOUNT = new BigDecimal("1");
 	public static final String DESCRIPTION = "Cheeseburger";
 	public static final String UOM_ID = "2";
@@ -42,7 +41,6 @@ class IngredientToIngredientCommandTest {
 		//given
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
-		ingredient.setRecipe(RECIPE);
 		ingredient.setAmount(AMOUNT);
 		ingredient.setDescription(DESCRIPTION);
 		ingredient.setUnitOfMeasure(null);
@@ -60,7 +58,6 @@ class IngredientToIngredientCommandTest {
 		//given
 		Ingredient ingredient = new Ingredient();
 		ingredient.setId(ID_VALUE);
-		ingredient.setRecipe(RECIPE);
 		ingredient.setAmount(AMOUNT);
 		ingredient.setDescription(DESCRIPTION);
 

@@ -1,6 +1,5 @@
 package guru.springframework.recipe.domain;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

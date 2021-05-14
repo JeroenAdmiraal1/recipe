@@ -24,13 +24,9 @@ public class Recipe {
 	private String source;
 	private String url;
 	private String directions;
-
 	private Set<Ingredient> ingredients = new HashSet<>();
-
 	private Byte[] image;
-
 	private Difficulty difficulty;
-
 	private Notes notes;
 
 	@DBRef

@@ -16,7 +16,6 @@ public class Category {
 	@Id
 	private String id;
 	private String description;
-
 	private Set<Recipe> recipes;
 
 }

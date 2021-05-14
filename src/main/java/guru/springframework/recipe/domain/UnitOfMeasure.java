@@ -14,7 +14,6 @@ public class UnitOfMeasure {
 
 	@Id
 	private String id;
-
 	private String description;
 
 }

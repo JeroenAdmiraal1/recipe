@@ -4,13 +4,16 @@ import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repositories.UnitOfMeasureRepository;
+import guru.springframework.recipe.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +26,7 @@ class UnitOfMeasureServiceImplTest {
 	UnitOfMeasureService service;
 
 	@Mock
-	UnitOfMeasureRepository unitOfMeasureRepository;
+	UnitOfMeasureReactiveRepository unitOfMeasureRepository;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -42,10 +45,10 @@ class UnitOfMeasureServiceImplTest {
 		uom2.setId("2");
 		unitOfMeasures.add(uom2);
 
-		when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);
+		when(unitOfMeasureRepository.findAll()).thenReturn(Flux.just(uom1, uom2));
 
 		//when
-		Set<UnitOfMeasureCommand> commands = service.listAllUnitOfMeasure();
+		List<UnitOfMeasureCommand> commands = service.listAllUnitOfMeasure().collectList().block();
 
 		//then
 		assertEquals(2, commands.size());

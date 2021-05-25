@@ -2,6 +2,7 @@ package guru.springframework.recipe.controllers;
 
 import guru.springframework.recipe.commands.IngredientCommand;
 import guru.springframework.recipe.commands.RecipeCommand;
+import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.services.IngredientService;
 import guru.springframework.recipe.services.RecipeService;
 import guru.springframework.recipe.services.UnitOfMeasureService;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 
@@ -79,7 +81,7 @@ class IngredientControllerTest {
 		recipeCommand.setId("1");
 
 		when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
-		when(unitOfMeasureService.listAllUnitOfMeasure()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.listAllUnitOfMeasure()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		mockMvc.perform(get("/recipe/1/ingredient/new"))
 				.andExpect(status().isOk())
@@ -94,7 +96,7 @@ class IngredientControllerTest {
 	void testUpdateIngredientForm() throws Exception {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 		when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
-		when(unitOfMeasureService.listAllUnitOfMeasure()).thenReturn(new HashSet<>());
+		when(unitOfMeasureService.listAllUnitOfMeasure()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		mockMvc.perform(get("/recipe/1/ingredient/2/update"))
 				.andExpect(status().isOk())

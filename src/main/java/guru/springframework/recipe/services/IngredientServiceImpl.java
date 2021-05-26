@@ -23,15 +23,15 @@ public class IngredientServiceImpl implements IngredientService {
 	private final IngredientToIngredientCommand ingredientToIngredientCommand;
 	private final IngredientCommandToIngredient ingredientCommandToIngredient;
 	private final RecipeReactiveRepository recipeReactiveRepository;
-	private final RecipeRepository recipeRepository;
 	private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
-	public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand, IngredientCommandToIngredient ingredientCommandToIngredient, RecipeReactiveRepository recipeReactiveRepository
-			, RecipeRepository recipeRepository, UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository) {
+	public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand,
+	                             IngredientCommandToIngredient ingredientCommandToIngredient,
+	                             RecipeReactiveRepository recipeReactiveRepository,
+	                             UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository) {
 		this.ingredientToIngredientCommand = ingredientToIngredientCommand;
 		this.ingredientCommandToIngredient = ingredientCommandToIngredient;
 		this.recipeReactiveRepository = recipeReactiveRepository;
-		this.recipeRepository = recipeRepository;
 		this.unitOfMeasureReactiveRepository = unitOfMeasureReactiveRepository;
 	}
 
@@ -53,12 +53,11 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
 	@Transactional
 	public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
-		Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
+		Recipe recipe = recipeReactiveRepository.findById(command.getRecipeId()).block();
 
-		if(!recipeOptional.isPresent()){
+		if(recipe == null){
 			return Mono.just(new IngredientCommand());
 		} else {
-			Recipe recipe = recipeOptional.get();
 			Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream()
 					                                          .filter(ingredient -> ingredient.getId().equals(command.getId()))
 					                                          .findFirst();
@@ -69,7 +68,6 @@ public class IngredientServiceImpl implements IngredientService {
 				ingredientFound.setAmount(command.getAmount());
 				ingredientFound.setUnitOfMeasure(unitOfMeasureReactiveRepository
 						                       .findById(command.getUnitOfMeasure().getId()).block());
-//						                       .orElseThrow(() -> new RuntimeException("UOM NOT FOUND"))); //todo address this
 			} else {
 				//add new Ingredient
 				Ingredient ingredient = ingredientCommandToIngredient.convert(command);
@@ -99,10 +97,8 @@ public class IngredientServiceImpl implements IngredientService {
 	public Mono<Void> deleteByRecipeAndIngredientId(String recipeId, String ingredientId) {
 		log.debug("Deleting ingredient: " + recipeId + ":" + ingredientId);
 
-		Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-
-		if(recipeOptional.isPresent()){
-			Recipe recipe = recipeOptional.get();
+		Recipe recipe = recipeReactiveRepository.findById(recipeId).block();
+		if(recipe != null){
 			log.debug("found recipe");
 
 			Optional<Ingredient> ingredientOptional = recipe.getIngredients()
@@ -114,7 +110,7 @@ public class IngredientServiceImpl implements IngredientService {
 				log.debug("found Ingredient");
 				Ingredient ingredientToDelete = ingredientOptional.get();
 				recipe.getIngredients().remove(ingredientOptional.get());
-				recipeRepository.save(recipe);
+				recipeReactiveRepository.save(recipe).block();
 			}
 		} else {
 			log.debug("Recipe Id Not found. Id:" + recipeId);

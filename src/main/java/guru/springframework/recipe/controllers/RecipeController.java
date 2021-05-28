@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
@@ -76,14 +75,14 @@ public class RecipeController {
 		return "redirect:/";
 	}
 
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ExceptionHandler(NotFoundException.class)
-	public ModelAndView handleNotFound(NotFoundException e){
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("recipe/404error");
-		modelAndView.addObject("exception", e);
-		return modelAndView;
-
-	}
+//	@ResponseStatus(HttpStatus.NOT_FOUND)
+//	@ExceptionHandler(NotFoundException.class)
+//	public ModelAndView handleNotFound(NotFoundException e){
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("recipe/404error");
+//		modelAndView.addObject("exception", e);
+//		return modelAndView;
+//
+//	}
 
 }

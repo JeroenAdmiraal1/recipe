@@ -5,12 +5,10 @@ import guru.springframework.recipe.converters.IngredientCommandToIngredient;
 import guru.springframework.recipe.converters.IngredientToIngredientCommand;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Recipe;
-import guru.springframework.recipe.repositories.RecipeRepository;
 import guru.springframework.recipe.repositories.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -51,46 +49,65 @@ public class IngredientServiceImpl implements IngredientService {
 	}
 
 	@Override
-	@Transactional
 	public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
 		Recipe recipe = recipeReactiveRepository.findById(command.getRecipeId()).block();
 
 		if(recipe == null){
+			log.error("Recipe not found for id: " + command.getRecipeId());
 			return Mono.just(new IngredientCommand());
 		} else {
-			Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream()
+
+			Optional<Ingredient> ingredientOptional = recipe.getIngredients()
+					                                          .stream()
 					                                          .filter(ingredient -> ingredient.getId().equals(command.getId()))
 					                                          .findFirst();
 
-			if(ingredientOptional.isPresent()){
-				Ingredient ingredientFound = ingredientOptional.get();
-				ingredientFound.setDescription(command.getDescription());
-				ingredientFound.setAmount(command.getAmount());
-				ingredientFound.setUnitOfMeasure(unitOfMeasureReactiveRepository
-						                       .findById(command.getUnitOfMeasure().getId()).block());
+			if(!ingredientOptional.isPresent()){
+				saveNewIngredientToRecipe(command, recipe);
 			} else {
-				//add new Ingredient
-				Ingredient ingredient = ingredientCommandToIngredient.convert(command);
-				recipe.addIngredient(ingredient);
+				updateExistingIngredientInRecipe(command, ingredientOptional);
 			}
 
 			Recipe savedRecipe = recipeReactiveRepository.save(recipe).block();
 
-			Optional<Ingredient> savedIngredientOptional = savedRecipe.getIngredients()
-					                                               .stream()
-					                                               .filter(recipeIngredients -> recipeIngredients.getId().equals(command.getId()))
-					                                               .findFirst();
-			//check by description
-			if(!savedIngredientOptional.isPresent()){
-				savedIngredientOptional = savedRecipe.getIngredients()
-						                          .stream()
-						                          .filter(recipeIngredients -> recipeIngredients.getDescription().equals(command.getDescription()))
-						                          .filter(recipeIngredients -> recipeIngredients.getAmount().equals(command.getAmount()))
-						                          .filter(recipeIngredients -> recipeIngredients.getUnitOfMeasure().getId().equals(command.getUnitOfMeasure().getId()))
-						                          .findFirst();
-			}
-			return Mono.just(ingredientToIngredientCommand.convert(savedIngredientOptional.get()));
+			Optional<Ingredient> savedIngredientOptional = getNewOrUpdatedIngredientFromTheRecipe(command, savedRecipe);
+
+			IngredientCommand ingredientCommandNew = ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+			ingredientCommandNew.setRecipeId(recipe.getId());
+
+			return Mono.just(ingredientCommandNew);
+
 		}
+	}
+
+	private void updateExistingIngredientInRecipe(IngredientCommand command, Optional<Ingredient> ingredientOptional) {
+		Ingredient ingredientFound = ingredientOptional.get();
+		ingredientFound.setDescription(command.getDescription());
+		ingredientFound.setAmount(command.getAmount());
+		ingredientFound.setUnitOfMeasure(unitOfMeasureReactiveRepository
+				                                 .findById(command.getUnitOfMeasure().getId()).block());
+	}
+
+	private void saveNewIngredientToRecipe(IngredientCommand command, Recipe recipe) {
+		Ingredient ingredient = ingredientCommandToIngredient.convert(command);
+		recipe.addIngredient(ingredient);
+	}
+
+	private Optional<Ingredient> getNewOrUpdatedIngredientFromTheRecipe(IngredientCommand command, Recipe savedRecipe) {
+		Optional<Ingredient> savedIngredientOptional = savedRecipe.getIngredients()
+				                                               .stream()
+				                                               .filter(recipeIngredients -> recipeIngredients.getId().equals(command.getId()))
+				                                               .findFirst();
+
+		if(!savedIngredientOptional.isPresent()){
+			savedIngredientOptional = savedRecipe.getIngredients()
+					                          .stream()
+					                          .filter(recipeIngredients -> recipeIngredients.getDescription().equals(command.getDescription()))
+					                          .filter(recipeIngredients -> recipeIngredients.getAmount().equals(command.getAmount()))
+					                          .filter(recipeIngredients -> recipeIngredients.getUnitOfMeasure().getId().equals(command.getUnitOfMeasure().getId()))
+					                          .findFirst();
+		}
+		return savedIngredientOptional;
 	}
 
 	@Override

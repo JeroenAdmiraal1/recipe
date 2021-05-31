@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
@@ -31,11 +32,16 @@ public class IngredientController {
 	@GetMapping("/recipe/{id}/ingredients")
 	public String getIngredients(@PathVariable String id, Model model){
 		log.debug("getting ingredient list for recipe:" + id);
-		RecipeCommand recipe = recipeService.findCommandById(id).block();
 
-		model.addAttribute("recipe", recipe);
+		model.addAttribute("recipe", recipeService.findCommandById(id));
 
 		return "recipe/ingredient/list";
+	}
+
+	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/show")
+	public String showRecipeIngredient(@PathVariable String id, @PathVariable String ingredientId, Model model){
+		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(id, ingredientId));
+		return "recipe/ingredient/show";
 	}
 
 	@GetMapping("/recipe/{id}/ingredient/new")
@@ -47,20 +53,14 @@ public class IngredientController {
 		model.addAttribute("ingredient",ingredientCommand);
 		ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
 
-		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure().collectList().block());
+		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
 		return "recipe/ingredient/ingredientform";
-	}
-
-	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/show")
-	public String showRecipeIngredient(@PathVariable String id, @PathVariable String ingredientId, Model model){
-		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(id, ingredientId).block());
-		return "recipe/ingredient/show";
 	}
 
 	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/update")
 	public String updateRecipeIngredient(@PathVariable String id, @PathVariable String ingredientId, Model model){
-		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(id, ingredientId).block());
-		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure().collectList().block());
+		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(id, ingredientId));
+		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
 		return "recipe/ingredient/ingredientform";
 	}
 
@@ -77,7 +77,7 @@ public class IngredientController {
 	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/delete")
 	public String deleteIngredient(@PathVariable String id, @PathVariable String ingredientId){
 		log.debug("deleting ingredient by id: " + ingredientId );
-		ingredientService.deleteByRecipeAndIngredientId(id, ingredientId).block();
+		ingredientService.deleteByRecipeAndIngredientId(id, ingredientId);
 		return "redirect:/recipe/" + id + "/ingredients";
 	}
 }

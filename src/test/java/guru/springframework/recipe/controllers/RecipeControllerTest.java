@@ -5,6 +5,7 @@ import guru.springframework.recipe.domain.Recipe;
 import guru.springframework.recipe.exceptions.NotFoundException;
 import guru.springframework.recipe.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class RecipeControllerTest {
 

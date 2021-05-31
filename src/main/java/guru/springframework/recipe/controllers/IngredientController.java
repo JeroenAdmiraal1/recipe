@@ -9,7 +9,10 @@ import guru.springframework.recipe.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,10 +26,17 @@ public class IngredientController {
 	private final IngredientService ingredientService;
 	private final UnitOfMeasureService unitOfMeasureService;
 
+	private WebDataBinder webDataBinder;
+
 	public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
 		this.recipeService = recipeService;
 		this.ingredientService = ingredientService;
 		this.unitOfMeasureService = unitOfMeasureService;
+	}
+
+	@InitBinder("ingredient")
+	public void initBinder(WebDataBinder webDataBinder){
+		this.webDataBinder = webDataBinder;
 	}
 
 	@GetMapping("/recipe/{id}/ingredients")
@@ -65,13 +75,27 @@ public class IngredientController {
 	}
 
 	@PostMapping("recipe/{recipeId}/ingredient")
-	public String saveOrUpdate(@ModelAttribute IngredientCommand command){
-		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+	public Mono<String> saveOrUpdate(@ModelAttribute IngredientCommand command, @PathVariable String recipeId, Model model){
 
-		log.debug("saved receipe id:" + savedCommand.getRecipeId());
-		log.debug("saved ingredient id:" + savedCommand.getId());
+		webDataBinder.validate();
+		BindingResult bindingResult = webDataBinder.getBindingResult();
 
-		return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
+		if(bindingResult.hasErrors()) {
+
+			bindingResult.getAllErrors().forEach(objectError -> {
+				log.debug(objectError.toString());
+			});
+			model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
+
+			return Mono.just("recipe/ingredient/ingredientform");
+		}
+
+		//IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+		Mono<String> redirect = ingredientService
+				                        .saveIngredientCommand(command)
+				                        .map(savedCommand -> "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show");
+
+		return redirect;
 	}
 
 	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/delete")

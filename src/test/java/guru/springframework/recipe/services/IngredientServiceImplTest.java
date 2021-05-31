@@ -1,12 +1,14 @@
 package guru.springframework.recipe.services;
 
 import guru.springframework.recipe.commands.IngredientCommand;
+import guru.springframework.recipe.commands.UnitOfMeasureCommand;
 import guru.springframework.recipe.converters.IngredientCommandToIngredient;
 import guru.springframework.recipe.converters.IngredientToIngredientCommand;
 import guru.springframework.recipe.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import guru.springframework.recipe.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.recipe.domain.Ingredient;
 import guru.springframework.recipe.domain.Recipe;
+import guru.springframework.recipe.domain.UnitOfMeasure;
 import guru.springframework.recipe.repositories.RecipeRepository;
 import guru.springframework.recipe.repositories.reactive.RecipeReactiveRepository;
 import guru.springframework.recipe.repositories.reactive.UnitOfMeasureReactiveRepository;
@@ -83,6 +85,9 @@ class IngredientServiceImplTest {
 		IngredientCommand command = new IngredientCommand();
 		command.setId("3");
 		command.setRecipeId("2");
+		UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+		unitOfMeasureCommand.setId("2");
+		command.setUnitOfMeasure(unitOfMeasureCommand);
 
 		Recipe savedRecipe = new Recipe();
 		savedRecipe.addIngredient(new Ingredient());
@@ -90,6 +95,7 @@ class IngredientServiceImplTest {
 
 		when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(new Recipe()));
 		when(recipeReactiveRepository.save(any())).thenReturn(Mono.just(savedRecipe));
+		when(unitOfMeasureReactiveRepository.findById(anyString())).thenReturn(Mono.just(new UnitOfMeasure()));
 
 		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 

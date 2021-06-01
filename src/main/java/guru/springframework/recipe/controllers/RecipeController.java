@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.thymeleaf.exceptions.TemplateInputException;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
@@ -90,14 +91,14 @@ public class RecipeController {
 		return "redirect:/";
 	}
 
-//	@ResponseStatus(HttpStatus.NOT_FOUND)
-//	@ExceptionHandler(NotFoundException.class)
-//	public ModelAndView handleNotFound(NotFoundException e){
-//		ModelAndView modelAndView = new ModelAndView();
-//		modelAndView.setViewName("recipe/404error");
-//		modelAndView.addObject("exception", e);
-//		return modelAndView;
-//
-//	}
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({NotFoundException.class, TemplateInputException.class})
+	public String handleNotFound(Exception e, Model model){
+
+		model.addAttribute("exception", e);
+
+		return "recipe/404error";
+
+	}
 
 }

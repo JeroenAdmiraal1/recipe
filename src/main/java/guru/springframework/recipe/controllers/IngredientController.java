@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -63,14 +64,12 @@ public class IngredientController {
 		model.addAttribute("ingredient",ingredientCommand);
 		ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
 
-		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
 		return "recipe/ingredient/ingredientform";
 	}
 
 	@GetMapping("/recipe/{id}/ingredient/{ingredientId}/update")
 	public String updateRecipeIngredient(@PathVariable String id, @PathVariable String ingredientId, Model model){
 		model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(id, ingredientId));
-		model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
 		return "recipe/ingredient/ingredientform";
 	}
 
@@ -85,7 +84,6 @@ public class IngredientController {
 			bindingResult.getAllErrors().forEach(objectError -> {
 				log.debug(objectError.toString());
 			});
-			model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasure());
 
 			return Mono.just("recipe/ingredient/ingredientform");
 		}
@@ -104,4 +102,10 @@ public class IngredientController {
 		ingredientService.deleteByRecipeAndIngredientId(id, ingredientId);
 		return "redirect:/recipe/" + id + "/ingredients";
 	}
+
+	@ModelAttribute("unitOfMeasureList")
+	public Flux<UnitOfMeasureCommand> populateUnitOfMeasureList(){
+		return unitOfMeasureService.listAllUnitOfMeasure();
+	}
+
 }
